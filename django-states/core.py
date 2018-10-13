@@ -8,7 +8,7 @@ LINKS = {
         "free": "main_index_free.html",
         "nonfree": "main_index_nonfree.html",
     },
-    os.path.join("gastos", "static"): {
+    os.path.join("expenses", "static"): {
         "free": "static-free",
         "nonfree": "static-nonfree",
     },

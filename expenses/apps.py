@@ -3,5 +3,5 @@ from django.apps import AppConfig
 
 
 # Classes:
-class GastosConfig(AppConfig):
-    name = 'gastos'
+class ExpensesConfig(AppConfig):
+    name = 'expenses'

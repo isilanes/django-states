@@ -13,5 +13,5 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name="main_index.html"), name="main_index"),
 
     # Apps:
-    path('gastos/', include('gastos.urls', namespace="gastos")),
+    path('expenses/', include('expenses.urls', namespace="expenses")),
 ]

@@ -6,7 +6,7 @@ from . import views
 
 
 # Constants:
-app_name = "gastos"
+app_name = "expenses"
 
 
 # URL patterns:
