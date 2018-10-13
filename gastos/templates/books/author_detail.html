@@ -1,0 +1,29 @@
+<head>
+    {% include "books/header.html" %}
+</head>
+
+<body>
+
+<div id="banner">
+    <div id="book-head">
+        Author: {{author.name}}
+    </div>
+</div>
+
+<div id="main-content">
+    <p><a href="{% url 'books:index' %}">Volver al índice</a></p>
+    <br>
+
+    <table>
+        <tr>
+            <th>Libros</th>
+        </tr>
+        {% for book in author.book_set.all %}
+        <tr>
+            <td><a href="{% url 'books:book_detail' book.id %}">{{ book }}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+</body>

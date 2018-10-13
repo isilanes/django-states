@@ -1,0 +1,54 @@
+{% include "books/header.html" %}
+{% include "books/bokeh_header.html" %}
+
+<div id="banner">
+    <div id="book-head">
+        Stats para {{ year }}
+    </div>
+</div>
+
+
+<div id="main-content">
+
+    {% include "books/top_menu.html" %}
+
+    <br>
+
+    <table>
+        <tr>
+            <th>Libros leídos:</th>
+            <td>{{state.books_read|floatformat:1}}</td>
+        </tr>
+        <tr>
+            <th>Libros por semana:</th>
+            <td>{{state.books_per_week|floatformat:2}}</td>
+        </tr>
+        <tr>
+            <th>Páginas leídas:</th>
+            <td>{{state.pages_read}}</td>
+        </tr>
+        <tr>
+            <th>Páginas leídas por día:</th>
+            <td>{{state.pages_per_day|floatformat:1}}</td>
+        </tr>
+        <tr>
+            <th>Páginas por libro:</th>
+            <td>{{state.pages_per_book|floatformat:1}}</td>
+        </tr>
+
+        <tr><td></td></tr>
+
+        <tr>
+            <th>Libros que faltan por leer:</th>
+            <td>{{state.required_books|floatformat:1}}</td>
+        </tr>
+        <tr>
+            <th>Libros por semana necesarios:</th>
+            <td>{{state.required_books_per_week|floatformat:2}}</td>
+        </tr>
+        <tr>
+            <th>Páginas diarias necesarias:</th>
+            <td>{{state.required_pages_per_day|floatformat:1}}</td>
+        </tr>
+    </table>
+</div>

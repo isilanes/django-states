@@ -1,0 +1,11 @@
+__pycache__
+*.swp
+*.pyc
+/static/
+backup
+.idea
+*nonfree*
+gasolina/static
+books/static
+ahorro/static
+WebProgress/templates/main_index.html

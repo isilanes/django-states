@@ -1,0 +1,33 @@
+<head>
+    {% include "books/header.html" %}
+</head>
+
+<body>
+
+<div id="banner">
+    <div id="book-head">
+        Modify book: {{book.title}}
+    </div>
+</div>
+
+<div id="main-content">
+    <p>
+        <a href="{% url 'books:index' %}">Volver al índice</a> |
+        <a href="{% url 'books:book_detail' book.id %}">Volver al libro</a>
+    </p>
+
+    <br>
+
+    <form action="{% url 'books:modify_book' book.id %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Submit">
+    </form>
+
+    <form action="{% url 'books:mark_book_read' book.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Mark read</button>
+    </form>
+</div>
+
+</body>
