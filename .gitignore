@@ -5,7 +5,5 @@ __pycache__
 backup
 .idea
 *nonfree*
-gasolina/static
-books/static
-ahorro/static
-WebProgress/templates/main_index.html
+expenses/static
+django-states/templates/main_index.html
