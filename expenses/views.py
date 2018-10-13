@@ -1,12 +1,7 @@
 # Django libs:
 from django.shortcuts import render, redirect
 
-# Bokeh libs:
-from bokeh.plotting import figure
-from bokeh.embed import components
-
 # Our libs:
-#from .forms import BookForm
 from .models import Expense
 
 
@@ -15,6 +10,7 @@ def index(request):
     """Index view."""
 
     context = {
+        "expenses": Expense.objects.all(),
     }
 
     return render(request, "expenses/index.html", context)

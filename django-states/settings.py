@@ -9,9 +9,9 @@ from . import core
 # You can specify multiple configuration files to be checked in order.
 # The first one found will be used.
 try_confs = [
-    os.environ.get("DJANGO_PROGRESS_CONF", None),
-    os.path.join(os.environ["HOME"], ".django-progress.json"),
-    os.path.join("conf", "django-progress.json"),
+    os.environ.get("DJANGO_STATES_CONF", None),
+    os.path.join(os.environ["HOME"], ".django-states.json"),
+    os.path.join("conf", "django-states.json"),
 ]
 
 for conf in try_confs:

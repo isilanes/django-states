@@ -34,19 +34,7 @@ div#banner500 {
     background-color: #ddb511;
 }
 
-div#banner.Expirado {
-    background-color: #aa2222;
-}
-
-div#banner.Terminado {
-    background-color: #22aa22;
-}
-
-div#banner.Congelado {
-    background-color: #aaaa00;
-}
-
-div#banner-content { 
+div#banner-content {
     position: center;
     width: 500px; 
     margin: 0 auto; 
@@ -56,7 +44,7 @@ div#banner-content {
     font-size: 150%;
 }
 
-div#book-head {
+div#expenses-head {
     position: left;
     width: 900px;
     margin: 0 0 0 20; 
@@ -102,18 +90,6 @@ td {
 
 td.Activo {
     color: #0000cc;
-}
-
-td.Expirado {
-    color: #cc0000;
-}
-
-td.Congelado {
-    color: #aaaa00;
-}
-
-td.Terminado {
-    color: #22aa22;
 }
 
 td.Atenuado {

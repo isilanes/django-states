@@ -10,4 +10,17 @@
 
 {% include "expenses/top_menu.html" %}
 
+<br>
+
+<table>
+    <tr>
+        <th>Expense</th>
+    </tr>
+    {% for expense in expenses %}
+    <tr>
+        <td>{{ expense }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
 </div>
