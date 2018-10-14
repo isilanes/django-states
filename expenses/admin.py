@@ -2,7 +2,7 @@
 from django.contrib import admin
 
 # Our libs:
-from .models import PeriodicExpense, OneOffExpense, Update
+from .models import PeriodicExpense, OneOffExpense, Update, SporadicExpense
 
 
 # Classes:
@@ -21,6 +21,14 @@ class PeriodicExpenseAdmin(admin.ModelAdmin):
 
 @admin.register(OneOffExpense)
 class OneOffExpenseAdmin(admin.ModelAdmin):
+    fields = ["concept"]
+    list_display = ("concept",)
+    search_fields = ["concept"]
+    inlines = [UpdateInline]
+
+
+@admin.register(SporadicExpense)
+class SporadicExpenseAdmin(admin.ModelAdmin):
     fields = ["concept"]
     list_display = ("concept",)
     search_fields = ["concept"]

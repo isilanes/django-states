@@ -15,10 +15,12 @@
 <table>
     <tr>
         <th>Expense</th>
+        <th>Monthly cost</th>
     </tr>
     {% for expense in expenses %}
     <tr>
         <td>{{ expense }}</td>
+        <td style="text-align: right">{{ expense.monthly_cost|floatformat:2 }}</td>
     </tr>
     {% endfor %}
 </table>

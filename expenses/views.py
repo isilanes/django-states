@@ -2,15 +2,19 @@
 from django.shortcuts import render, redirect
 
 # Our libs:
-from .models import Expense
+from .models import Expense, OneOffExpense
 
 
 # Views:
 def index(request):
     """Index view."""
 
+    # Get all non one-off expenses:
+    expenses = [e for e in Expense.objects.all().select_subclasses() if not isinstance(e, OneOffExpense)]
+
+    # As always, build context:
     context = {
-        "expenses": Expense.objects.all(),
+        "expenses": expenses,
     }
 
     return render(request, "expenses/index.html", context)
