@@ -92,7 +92,7 @@ class PeriodicIncome(Income):
     def current_amount(self):
         """Value (euros) of current state of income. Latest value."""
 
-        return Update.objects.filter(expense=self).order_by("-when").first().sum
+        return IncomeUpdate.objects.filter(income=self).order_by("-when").first().sum
 
     @property
     def monthly_amount(self):
@@ -126,7 +126,7 @@ class SporadicIncome(Income):
     def monthly_amount(self):
         """Sum all historic incomes, and divide by months between first income and now."""
 
-        updates = Update.objects.filter(expense=self)
+        updates = IncomeUpdate.objects.filter(income=self)
         s = sum([u.sum for u in updates]) # euros
         dt = (timezone.now() - updates.order_by("when").first().when).days / 30.0 # months
 

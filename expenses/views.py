@@ -2,19 +2,23 @@
 from django.shortcuts import render, redirect
 
 # Our libs:
-from .models import Expense, OneOffExpense
+from .models import Expense, OneOffExpense, Income, OneOffIncome
 
 
 # Views:
 def index(request):
     """Index view."""
 
-    # Get all non one-off expenses:
+    # Get all non one-off expenses/incomes:
     expenses = [e for e in Expense.objects.all().select_subclasses() if not isinstance(e, OneOffExpense)]
+    incomes = [i for i in Income.objects.all().select_subclasses() if not isinstance(i, OneOffIncome)]
+    net = net_monthly_saving()
 
     # As always, build context:
     context = {
         "expenses": expenses,
+        "incomes": incomes,
+        "net": net,
     }
 
     return render(request, "expenses/index.html", context)
@@ -55,5 +59,19 @@ def modify_expense(request, expense_id):
     }
 
     return render(request, 'books/modify_book.html', context)
+
+
+# Helper functions:
+def net_monthly_saving():
+    """Net amount of money saved each month."""
+
+    total = 0.0
+    for expense in Expense.objects.all().select_subclasses():
+        total -= expense.monthly_cost
+
+    for income in Income.objects.all().select_subclasses():
+        total += income.monthly_amount
+
+    return total
 
 

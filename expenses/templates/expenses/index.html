@@ -7,22 +7,44 @@
 </div>
 
 <div id="main-content">
+    {% include "expenses/top_menu.html" %}
 
-{% include "expenses/top_menu.html" %}
+    <br>
 
-<br>
+    <table>
+        <tr>
+            <th>Summary</th>
+            <th>Monthly net</th>
+        </tr>
+        <tr>
+            <td></td>
+            <td style="text-align: right">{{ net|floatformat:2 }}</td>
+        </tr>
 
-<table>
-    <tr>
-        <th>Expense</th>
-        <th>Monthly cost</th>
-    </tr>
-    {% for expense in expenses %}
-    <tr>
-        <td>{{ expense }}</td>
-        <td style="text-align: right">{{ expense.monthly_cost|floatformat:2 }}</td>
-    </tr>
-    {% endfor %}
-</table>
+        <tr><td></td></tr>
 
+        <tr>
+            <th>Income</th>
+            <th>Monthly sum</th>
+        </tr>
+        {% for income in incomes %}
+        <tr>
+            <td>{{ income }}</td>
+            <td style="text-align: right">{{ income.monthly_amount|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+
+        <tr><td></td></tr>
+
+        <tr>
+            <th>Expense</th>
+            <th>Monthly cost</th>
+        </tr>
+        {% for expense in expenses %}
+        <tr>
+            <td>{{ expense }}</td>
+            <td style="text-align: right">{{ expense.monthly_cost|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 </div>
