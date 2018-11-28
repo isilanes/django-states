@@ -2,10 +2,6 @@
 import os
 import json
 
-# Our libs:
-from . import core
-
-
 # You can specify multiple configuration files to be checked in order.
 # The first one found will be used.
 try_confs = [
@@ -54,7 +50,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'django-states.urls'
+ROOT_URLCONF = 'DjangoStates.urls'
 
 PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 TEMPLATES = [
@@ -73,7 +69,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'django-states.wsgi.application'
+WSGI_APPLICATION = 'DjangoStates.wsgi.application'
 
 
 # Database:
@@ -113,6 +109,6 @@ USE_TZ = True
 # Static files:
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "django-states", "static"),
+    os.path.join(BASE_DIR, "DjangoStates", "static"),
 ]
 
