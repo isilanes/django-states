@@ -14,14 +14,11 @@ try_confs = [
     os.path.join("conf", "django-states.json"),
 ]
 
-for conf in try_confs:
-    if conf and os.path.isfile(conf):
-        with open(conf, 'r') as f:
-            J = json.load(f)
+for conf_file in try_confs:
+    if conf_file and os.path.isfile(conf_file):
+        with open(conf_file, 'r') as f:
+            conf = json.load(f)
         break
-
-# Free or non-free version?:
-core.mk_links(free=J.get("FREE", True))
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -29,11 +26,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = J['SECRET_KEY']
+SECRET_KEY = conf['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = J["DEBUG"]
-ALLOWED_HOSTS = J["ALLOWED_HOSTS"]
+DEBUG = conf["DEBUG"]
+ALLOWED_HOSTS = conf["ALLOWED_HOSTS"]
 
 # Application definition:
 INSTALLED_APPS = [
@@ -44,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap3',
-] + J.get("MY_INSTALLED_APPS", [])
+] + conf.get("MY_INSTALLED_APPS", [])
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -83,7 +80,7 @@ WSGI_APPLICATION = 'django-states.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': J["DBFILE"],
+        'NAME': conf["DBFILE"],
     }
 }
 
