@@ -1,0 +1,43 @@
+div#banner {
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #2222ee;
+    position: center;
+    margin: 0 0;
+    padding: 10px 0px;
+    color: #ffffff;
+    text-align: center;
+    font-size: 300%;
+}
+
+table.buttons {
+    width: 100%;
+    padding: 0px;
+    border-spacing: 20px 20px;
+}
+
+.buttons td {
+    width: 50%;
+}
+
+.buttons a {
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    width: 100%;
+    height: 200px;
+    line-height: 200px;
+    font-size: 50px;
+    border-radius: 15px;
+}
+
+.button-expenses {
+    background-color: #cc1133;
+}
+
+a {
+    text-decoration: none;
+}
