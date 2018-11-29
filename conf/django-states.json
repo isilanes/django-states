@@ -3,6 +3,5 @@
     "DEBUG": true,
     "DBFILE": "states.db",
     "ALLOWED_HOSTS": ["localhost", "192.168.0.20"],
-    "MY_INSTALLED_APPS": ["expenses"],
-    "FREE": true
+    "MY_INSTALLED_APPS": ["expenses"]
 }
