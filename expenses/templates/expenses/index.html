@@ -43,7 +43,7 @@
         {% for expense in expenses %}
         <tr>
             <td>{{ expense }}</td>
-            <td style="text-align: right">{{ expense.monthly_cost|floatformat:2 }}</td>
+            <td style="text-align: right">{{ expense.current_amount_per_month|floatformat:2 }}</td>
         </tr>
         {% endfor %}
     </table>
