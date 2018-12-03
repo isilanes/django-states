@@ -33,7 +33,7 @@
             <td style="text-align: right">{{ group.net|floatformat:2 }}</td>
         </tr>
         {% for concept in group.concepts %}
-        <tr>
+        <tr class="secondary">
             <td> {{ concept }}</td>
             <td style="text-align: right"> {{ concept.current_amount_per_month|floatformat:2 }}</td>
         </tr>
@@ -52,7 +52,7 @@
             <td style="text-align: right">{{ group.net|floatformat:2 }}</td>
         </tr>
         {% for concept in group.concepts %}
-        <tr>
+        <tr class="secondary">
             <td> {{ concept }}</td>
             <td style="text-align: right"> {{ concept.current_amount_per_month|floatformat:2 }}</td>
         </tr>

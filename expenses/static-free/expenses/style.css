@@ -88,16 +88,9 @@ td {
     padding: 10px;
 }
 
-td.Activo {
-    color: #0000cc;
-}
-
-td.Atenuado {
-    color: #aaaaaa;
-}
-
-.enddate1 {
-    color: red;
+.secondary {
+    color: #666666;
+    font-size: 90%;
 }
 
 .row1 {
@@ -108,14 +101,3 @@ td.Atenuado {
     background-color: #d0d0ff;
 }
 
-.finished {
-    background-color: #11ee22;
-}
-
-.period_row_ko {
-    color: red;
-}
-
-.period_row_buffer {
-    color: #aaaa00;
-}
