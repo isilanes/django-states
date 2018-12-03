@@ -7,6 +7,19 @@ from django.utils import timezone
 class Group(models.Model):
     name = models.CharField("Name", max_length=200)
 
+    # Public properties:
+    @property
+    def net(self):
+        """Monthly net amount of all Concepts in this Group."""
+
+        return sum([c.current_amount_per_month for c in self.concepts])
+
+    @property
+    def concepts(self):
+        """Unordered list of all Concepts in Group."""
+
+        return self.concept_set.all()
+
     # Special methods:
     def __str__(self):
         return self.name

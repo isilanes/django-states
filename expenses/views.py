@@ -12,13 +12,10 @@ def index(request):
     # Get all non one-off expenses/incomes:
     expenses, incomes = [], []
     for group in Group.objects.all():
-        concepts = group.concept_set.all()
-        amount = sum([c.current_amount_per_month for c in concepts])
-        print(group, amount)
-        if amount < 0:
-            expenses.append([group, amount, concepts])
+        if group.net < 0:
+            expenses.append(group)
         else:
-            incomes.append([group, amount, concepts])
+            incomes.append(group)
 
     net = sum([c.current_amount_per_month for c in Concept.objects.all()])
 
