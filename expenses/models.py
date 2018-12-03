@@ -13,16 +13,25 @@ class Concept(models.Model):
     def current_amount_per_day(self):
         """Euros per day in (positive) or out (negative), as of latest changes."""
 
-        # For periodic concepts, take latest period:
+        # For periodic concepts, take latest period only:
         if self.periodic:
             try:
                 prev, curr = list(self.updates)[-2:]
                 dt = (curr.when - prev.when).total_seconds() / 86400.  # delta time in days
                 return curr.amount / dt
             except ValueError:
-                return 0.1
+                return 0.0
+        # Non-periodic concepts are averaged over the latest 3:
+        else:
+            try:
+                latest = list(self.updates)[-3:]
+                dt =(latest[2].when - latest[0].when).total_seconds() / 86400.  # delta time in days
+                da = sum([x.amount for x in latest]) * 0.6666  # 2/3 of last 3 amounts
+                return da / dt
+            except IndexError:
+                return 0.0
 
-        return 0.0
+        return None
 
     @property
     def updates(self):

@@ -30,7 +30,7 @@
         {% for income in incomes %}
         <tr>
             <td>{{ income }}</td>
-            <td style="text-align: right">{{ income.monthly_amount|floatformat:2 }}</td>
+            <td style="text-align: right">{{ income.current_amount_per_month|floatformat:2 }}</td>
         </tr>
         {% endfor %}
 
