@@ -18,7 +18,7 @@ class Group(models.Model):
 class Concept(models.Model):
     name = models.CharField('Name', max_length=200)
     periodic = models.BooleanField("Periodic", default=False)
-    group = models.ForeignKey(Group, blank=True, on_delete=models.CASCADE, null=True)
+    group = models.ForeignKey(Group, blank=True, on_delete=models.CASCADE, null=True, default=1)
 
     # Public properties:
     @property
@@ -49,7 +49,7 @@ class Concept(models.Model):
     def updates(self):
         """List of Updates in this concept, sorted by date."""
 
-        return Update.objects.filter(concept=self).order_by("when")
+        return self.update_set.order_by("when")
 
     @property
     def current_amount_per_month(self):

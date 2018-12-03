@@ -27,11 +27,17 @@
             <th>Income</th>
             <th>Monthly sum</th>
         </tr>
-        {% for income in incomes %}
+        {% for group, amount, concepts in incomes %}
         <tr>
-            <td>{{ income }}</td>
-            <td style="text-align: right">{{ income.current_amount_per_month|floatformat:2 }}</td>
+            <td>{{ group }}</td>
+            <td style="text-align: right">{{ amount|floatformat:2 }}</td>
         </tr>
+        {% for concept in concepts %}
+        <tr>
+            <td> {{ concept }}</td>
+            <td style="text-align: right"> {{ concept.current_amount_per_month|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
         {% endfor %}
 
         <tr><td></td></tr>
@@ -40,10 +46,10 @@
             <th>Expense</th>
             <th>Monthly cost</th>
         </tr>
-        {% for expense in expenses %}
+        {% for group, amount, concepts in expenses %}
         <tr>
-            <td>{{ expense }}</td>
-            <td style="text-align: right">{{ expense.current_amount_per_month|floatformat:2 }}</td>
+            <td>{{ group }}</td>
+            <td style="text-align: right">{{ amount|floatformat:2 }}</td>
         </tr>
         {% endfor %}
     </table>
