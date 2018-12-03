@@ -1,6 +1,7 @@
 # Define variables:
 PORT=$1
-NAME=DjangoStates
+APPNAME=DjangoStates
+NAME=django-states
 GUNICORN=gunicorn
 DBDIR=$HOME/db/$NAME
 ACCESS_LOG=$DBDIR/access.log
@@ -16,7 +17,7 @@ tail -n 0 -f $GUNICORN_LOG &
 
 # Start Gunicorn server:
 echo Starting Gunicorn...
-exec $GUNICORN $NAME.wsgi:application \
+exec $GUNICORN $APPNAME.wsgi:application \
     --name $NAME \
     --bind 0.0.0.0:$PORT \
     --workers 3 \
