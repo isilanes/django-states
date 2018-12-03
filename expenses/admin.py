@@ -2,7 +2,7 @@
 from django.contrib import admin
 
 # Our libs:
-from .models import Concept, Update
+from .models import Concept, Update, Group
 
 
 # Classes:
@@ -13,7 +13,7 @@ class UpdateInline(admin.StackedInline):
 
 @admin.register(Concept)
 class PeriodicExpenseAdmin(admin.ModelAdmin):
-    fields = ["name", "periodic"]
+    fields = ["name", "group", "periodic"]
     list_display = ("name",)
     search_fields = ["name"]
     inlines = [UpdateInline]
@@ -21,6 +21,11 @@ class PeriodicExpenseAdmin(admin.ModelAdmin):
 
 @admin.register(Update)
 class UpdateAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Group)
+class GroupAdmin(admin.ModelAdmin):
     pass
 
 

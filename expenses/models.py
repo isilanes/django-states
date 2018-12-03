@@ -4,9 +4,21 @@ from django.utils import timezone
 
 
 # Classes:
+class Group(models.Model):
+    name = models.CharField("Name", max_length=200)
+
+    # Special methods:
+    def __str__(self):
+        return self.name
+
+    def __unicode__(self):
+        return self.__str__()
+
+
 class Concept(models.Model):
     name = models.CharField('Name', max_length=200)
     periodic = models.BooleanField("Periodic", default=False)
+    group = models.ForeignKey(Group, blank=True, on_delete=models.CASCADE, null=True)
 
     # Public properties:
     @property
@@ -61,4 +73,5 @@ class Update(models.Model):
     # Special methods:
     def __str__(self):
         return f"{self.amount} euros for '{self.concept}' on {self.when}"
+
 
