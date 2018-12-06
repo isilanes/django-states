@@ -1,5 +1,5 @@
 # Django libs:
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 
 # Our libs:
 from .models import Concept, Group
@@ -9,26 +9,33 @@ from .models import Concept, Group
 def index(request):
     """Index view."""
 
-    # Get all non one-off expenses/incomes:
-    expenses, incomes = [], []
-    for group in Group.objects.all():
-        if group.net < 0:
-            expenses.append(group)
-        else:
-            incomes.append(group)
-
-    net = sum([c.current_amount_per_month for c in Concept.objects.all()])
-
     for concept in Concept.objects.filter(group=None):
         print(concept, "has no group!")
 
     # As always, build context:
     context = {
-        "expenses": expenses,
-        "incomes": incomes,
-        "net": net,
+        "expenses": expense_groups(),
+        "incomes": income_groups(),
+        "net": current_global_net(),
     }
 
     return render(request, "expenses/index.html", context)
 
 
+# Auxiliary functions:
+def income_groups():
+    """List of Groups with positive net amount, sorted by decreasing net amount."""
+
+    return sorted([g for g in Group.objects.all() if g.net >= 0], reverse=True)
+
+
+def expense_groups():
+    """List of Groups with negative net amount, sorted by increasing net amount."""
+
+    return sorted([g for g in Group.objects.all() if g.net < 0])
+
+
+def current_global_net():
+    """Current global monthly net."""
+
+    return sum([c.current_amount_per_month for c in Concept.objects.all()])

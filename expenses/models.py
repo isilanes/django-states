@@ -27,6 +27,9 @@ class Group(models.Model):
     def __unicode__(self):
         return self.__str__()
 
+    def __lt__(self, other):
+        return self.net < other.net
+
 
 class Concept(models.Model):
     name = models.CharField('Name', max_length=200)
