@@ -6,7 +6,7 @@ from .models import Concept, Group
 
 
 # Views:
-def index(request):
+def index(request, verbose=False):
     """Index view."""
 
     for concept in Concept.objects.filter(group=None):
@@ -17,9 +17,14 @@ def index(request):
         "expenses": expense_groups(),
         "incomes": income_groups(),
         "net": current_global_net(),
+        "verbose": verbose,
     }
 
     return render(request, "expenses/index.html", context)
+
+
+def index_verbose(request):
+    return index(request, verbose=True)
 
 
 # Auxiliary functions:

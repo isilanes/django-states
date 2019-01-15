@@ -44,22 +44,19 @@ class Concept(models.Model):
         # For periodic concepts, take latest period only:
         if self.periodic:
             try:
-                prev, curr = list(self.updates)[-2:]
-                dt = (curr.when - prev.when).total_seconds() / 86400.  # delta time in days
-                return curr.amount / dt
+                current = list(self.updates)[-1]
+                return current.amount / self.periodicity
             except ValueError:
                 return 0.0
-        # Non-periodic concepts are averaged over the latest 3:
+        # Non-periodic concepts are averaged over the latest up to 5:
         else:
             try:
-                latest = list(self.updates)[-3:]
-                dt =(latest[2].when - latest[0].when).total_seconds() / 86400.  # delta time in days
-                da = sum([x.amount for x in latest]) * 0.6666  # 2/3 of last 3 amounts
-                return da / dt
+                latest = list(self.updates)[-5:]
+                total_sum = sum([x.amount for x in latest])
+                dt = (timezone.now() - latest[0].when).total_seconds() / 86400.  # delta time in days
+                return total_sum / dt
             except IndexError:
                 return 0.0
-
-        return None
 
     @property
     def updates(self):
@@ -73,6 +70,20 @@ class Concept(models.Model):
 
         return self.current_amount_per_day * 30
 
+    @property
+    def periodicity(self):
+        """Infer periodicity from all logged activity. Return in days."""
+
+        u = list(self.updates)
+        if len(u) < 2:
+            return 30
+
+        first = u[0]
+        last = u[-1]
+        days = (last.when - first.when).total_seconds() / 86400.
+
+        return days / (len(u) - 1)
+
     # Special methods:
     def __str__(self):
         return self.name
@@ -85,6 +96,7 @@ class Update(models.Model):
     concept = models.ForeignKey(Concept, blank=True, on_delete=models.CASCADE, default=1)
     when = models.DateTimeField("When", blank=True, default=timezone.now)
     amount = models.FloatField("Amount", default=0.0)  # positive = income, negative = expense
+    comment = models.CharField("Comment", max_length=500, default=" ")
 
     # Special methods:
     def __str__(self):
