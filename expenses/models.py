@@ -18,7 +18,13 @@ class Group(models.Model):
     def concepts(self):
         """Unordered list of all Concepts in Group."""
 
-        return self.concept_set.all()
+        positives = [c for c in self.concept_set.all() if c.current_amount_per_day >= 0]
+        positives = [c for a, c in sorted([(c.current_amount_per_day, c) for c in positives], reverse=True)]
+
+        negatives = [c for c in self.concept_set.all() if c.current_amount_per_day < 0]
+        negatives = [c for a, c in sorted([(c.current_amount_per_day, c) for c in negatives])]
+
+        return positives + negatives
 
     # Special methods:
     def __str__(self):

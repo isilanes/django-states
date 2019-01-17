@@ -1,74 +1,65 @@
 {% include "expenses/header.html" %}
+{% include "expenses/top_menu.html" %}
 
-<div id="banner">
-    <div id="expenses-head">
-        Index
-    </div>
-</div>
+<br>
 
-<div id="main-content">
-    {% include "expenses/top_menu.html" %}
-
-    <br>
-
-    <table>
-        <tr>
-            <th>Summary</th>
-            <th>Monthly net</th>
-            {% if verbose %}
-                <td><a href="{% url 'expenses:index' %}">terse</a></td>
-            {% else %}
-                <td><a href="{% url 'expenses:index_verbose' %}">verbose</a></td>
-            {% endif %}
-        </tr>
-        <tr>
-            <td></td>
-            <td style="text-align: right">{{ net|floatformat:2 }}</td>
-        </tr>
-
-        <tr><td></td></tr>
-
-        <tr>
-            <th>Income</th>
-            <th>Monthly sum</th>
-        </tr>
-        {% for group in incomes %}
-        <tr>
-            <td>{{ group }}</td>
-            <td style="text-align: right">{{ group.net|floatformat:2 }}</td>
-        </tr>
-
+<table>
+    <tr>
+        <th>Summary</th>
+        <th>Monthly net</th>
         {% if verbose %}
-            {% for concept in group.concepts %}
-            <tr class="secondary">
-                <td> {{ concept }}</td>
-                <td style="text-align: right"> {{ concept.current_amount_per_month|floatformat:2 }}</td>
-            </tr>
-            {% endfor %}
+            <td><a href="{% url 'expenses:index' %}">terse</a></td>
+        {% else %}
+            <td><a href="{% url 'expenses:index_verbose' %}">verbose</a></td>
         {% endif %}
+    </tr>
+    <tr>
+        <td></td>
+        <td style="text-align: right">{{ net|floatformat:2 }}</td>
+    </tr>
 
-        {% endfor %}
+    <tr><td></td></tr>
 
-        <tr><td></td></tr>
+    <tr>
+        <th>Income</th>
+        <th>Monthly sum</th>
+    </tr>
+    {% for group in incomes %}
+    <tr>
+        <td>{{ group }}</td>
+        <td style="text-align: right">{{ group.net|floatformat:2 }}</td>
+    </tr>
 
-        <tr>
-            <th>Expense</th>
-            <th>Monthly cost</th>
+    {% if verbose %}
+        {% for concept in group.concepts %}
+        <tr class="secondary">
+            <td> {{ concept }}</td>
+            <td style="text-align: right"> {{ concept.current_amount_per_month|floatformat:2 }}</td>
         </tr>
-        {% for group in expenses %}
-        <tr>
-            <td>{{ group }}</td>
-            <td style="text-align: right">{{ group.net|floatformat:2 }}</td>
-        </tr>
-
-        {% if verbose %}
-            {% for concept in group.concepts %}
-            <tr class="secondary">
-                <td> {{ concept }}</td>
-                <td style="text-align: right"> {{ concept.current_amount_per_month|floatformat:2 }}</td>
-            </tr>
-            {% endfor %}
-        {% endif %}
         {% endfor %}
-    </table>
-</div>
+    {% endif %}
+
+    {% endfor %}
+
+    <tr><td></td></tr>
+
+    <tr>
+        <th>Expense</th>
+        <th>Monthly cost</th>
+    </tr>
+    {% for group in expenses %}
+    <tr>
+        <td>{{ group }}</td>
+        <td style="text-align: right">{{ group.net|floatformat:2 }}</td>
+    </tr>
+
+    {% if verbose %}
+        {% for concept in group.concepts %}
+        <tr class="secondary">
+            <td> {{ concept }}</td>
+            <td style="text-align: right"> {{ concept.current_amount_per_month|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+    {% endif %}
+    {% endfor %}
+</table>
