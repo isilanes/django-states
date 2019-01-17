@@ -2,7 +2,7 @@
 from django.shortcuts import render
 
 # Our libs:
-from .models import Concept, Group
+from .models import Concept, Group, Update
 
 
 # Views:
@@ -25,6 +25,17 @@ def index(request, verbose=False):
 
 def index_verbose(request):
     return index(request, verbose=True)
+
+
+def event_list(request, verbose=False):
+    """Event list view."""
+
+    # As always, build context:
+    context = {
+        "events": Update.objects.all(),
+    }
+
+    return render(request, "expenses/event_list.html", context)
 
 
 # Auxiliary functions:

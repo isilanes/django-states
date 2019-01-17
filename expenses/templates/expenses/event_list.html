@@ -1,0 +1,14 @@
+{% include "expenses/header.html" %}
+{% include "expenses/top_menu.html" %}
+
+<br>
+
+<table>
+    {% for event in events %}
+    <tr>
+        <td>{{ event.when }}</td>
+        <td>{{ event.concept.name }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
