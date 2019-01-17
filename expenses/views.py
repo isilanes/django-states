@@ -27,12 +27,12 @@ def index_verbose(request):
     return index(request, verbose=True)
 
 
-def event_list(request, verbose=False):
+def event_list(request):
     """Event list view."""
 
     # As always, build context:
     context = {
-        "events": Update.objects.all(),
+        "events": Update.objects.all().order_by("-when"),
     }
 
     return render(request, "expenses/event_list.html", context)

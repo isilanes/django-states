@@ -6,7 +6,7 @@
 <table>
     {% for event in events %}
     <tr>
-        <td>{{ event.when }}</td>
+        <td>{{ event.when|date:"Y-m-d H:i" }}</td>
         <td>{{ event.concept.name }}</td>
     </tr>
     {% endfor %}
