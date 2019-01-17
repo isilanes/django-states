@@ -16,15 +16,9 @@ class Group(models.Model):
 
     @property
     def concepts(self):
-        """Unordered list of all Concepts in Group."""
+        """Ordered list of all Concepts in Group."""
 
-        positives = [c for c in self.concept_set.all() if c.current_amount_per_day >= 0]
-        positives = [c for a, c in sorted([(c.current_amount_per_day, c) for c in positives], reverse=True)]
-
-        negatives = [c for c in self.concept_set.all() if c.current_amount_per_day < 0]
-        negatives = [c for a, c in sorted([(c.current_amount_per_day, c) for c in negatives])]
-
-        return positives + negatives
+        return sorted(self.concept_set.all())
 
     # Special methods:
     def __str__(self):
@@ -96,6 +90,12 @@ class Concept(models.Model):
 
     def __unicode__(self):
         return self.__str__()
+
+    def __lt__(self, other):
+        if self.current_amount_per_day < 0 and other.current_amount_per_day < 0:
+            return self.current_amount_per_day < other.current_amount_per_day
+
+        return self.current_amount_per_day > other.current_amount_per_day
 
 
 class Update(models.Model):
