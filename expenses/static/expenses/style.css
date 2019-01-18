@@ -2,48 +2,6 @@ li a {
     color: blue;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-}
-
-div#banner {
-    margin: 0;
-    position: absolute; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    background-color: #2222ee;
-}
-
-div#banner404 { 
-    margin: 0;
-    position: absolute; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    background-color: #cc2222;
-}
-
-div#banner500 { 
-    margin: 0;
-    position: absolute; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    background-color: #ddb511;
-}
-
-div#banner-content {
-    position: center;
-    width: 500px; 
-    margin: 0 auto; 
-    padding: 5px; 
-    color: #ffffff;
-    text-align: center;
-    font-size: 150%;
-}
-
 div#expenses-head {
     position: left;
     width: 900px;
@@ -66,6 +24,18 @@ div#expenses-head {
     margin: 2px;
 }
 
+.event-list-grid {
+    display: grid;
+    grid-template-columns: 150px 75px 1fr;
+    justify-items: left;
+    grid-gap: 4px 20px;
+    margin: 10px;
+}
+
+.event-list-grid div {
+    width: 100%;
+}
+
 .top-buttons-grid a {
     border: none;
     text-align: center;
@@ -82,4 +52,14 @@ div#expenses-head {
 .top-button {
     color: #ffffff;
     background-color: #216345;
+}
+
+.negative {
+    text-align: right;
+    color: #ee0000;
+}
+
+.positive {
+    text-align: right;
+    color: #000000;
 }

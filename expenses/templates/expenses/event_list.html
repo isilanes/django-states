@@ -1,12 +1,16 @@
 {% include "expenses/header.html" %}
 {% include "expenses/top_menu.html" %}
 
-<table>
+<div class="event-list-grid">
     {% for event in events %}
-    <tr>
-        <td>{{ event.when|date:"Y-m-d H:i" }}</td>
-        <td>{{ event.concept.name }}</td>
-    </tr>
+        <div>{{ event.when|date:"Y-m-d H:i" }}</div>
+        {% if event.amount < 0 %}
+            <div class="negative">
+        {% else %}
+            <div class="positive">
+        {% endif %}
+            {{ event.amount|floatformat:2 }}</div>
+        <div>{{ event.concept.name }}</div>
     {% endfor %}
-</table>
+</div>
 
