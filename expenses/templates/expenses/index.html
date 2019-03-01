@@ -1,65 +1,37 @@
 {% include "expenses/header.html" %}
 {% include "expenses/top_menu.html" %}
 
-<br>
+<div class="index-grid">
+    <div class="index-title-column index-header">Summary</div>
+    <div class="index-amount-column index-header">Monthly net</div>
 
-<table>
-    <tr>
-        <th>Summary</th>
-        <th>Monthly net</th>
-        {% if verbose %}
-            <td><a href="{% url 'expenses:index' %}">terse</a></td>
-        {% else %}
-            <td><a href="{% url 'expenses:index_verbose' %}">verbose</a></td>
-        {% endif %}
-    </tr>
-    <tr>
-        <td></td>
-        <td style="text-align: right">{{ net|floatformat:2 }}</td>
-    </tr>
+    <div class="index-amount-column">{{ net|floatformat:2 }}</div>
 
-    <tr><td></td></tr>
+    <div class="index-title-column index-header">Income</div>
+    <div class="index-amount-column index-header" id="xyz">Monthly sum</div>
 
-    <tr>
-        <th>Income</th>
-        <th>Monthly sum</th>
-    </tr>
     {% for group in incomes %}
-    <tr>
-        <td>{{ group }}</td>
-        <td style="text-align: right">{{ group.net|floatformat:2 }}</td>
-    </tr>
+        <div class="index-title-column">{{ group }}</div>
+        <div class="index-amount-column">{{ group.net|floatformat:2 }}</div>
+        <button class="toggle" onclick="mytoggle('{{group}}')">[toggle show]</button>
 
-    {% if verbose %}
         {% for concept in group.concepts %}
-        <tr class="secondary">
-            <td> {{ concept }}</td>
-            <td style="text-align: right"> {{ concept.current_amount_per_month|floatformat:2 }}</td>
-        </tr>
+        <div style="display: none;" class="index-title-column secondary {{group}}">{{concept}}</div>
+        <div style="display: none;" class="index-amount-column secondary {{group}}">{{concept.current_amount_per_month|floatformat:2}}</div>
         {% endfor %}
-    {% endif %}
-
     {% endfor %}
 
-    <tr><td></td></tr>
+    <div class="index-title-column index-header">Expense</div>
+    <div class="index-amount-column index-header">Monthly sum</div>
 
-    <tr>
-        <th>Expense</th>
-        <th>Monthly cost</th>
-    </tr>
     {% for group in expenses %}
-    <tr>
-        <td>{{ group }}</td>
-        <td style="text-align: right">{{ group.net|floatformat:2 }}</td>
-    </tr>
+        <div class="index-title-column">{{group}}</div>
+        <div class="index-amount-column">{{group.net|floatformat:2}}</div>
+        <button class="toggle" onclick="mytoggle('{{group}}')">[toggle show]</button>
 
-    {% if verbose %}
         {% for concept in group.concepts %}
-        <tr class="secondary">
-            <td> {{ concept }}</td>
-            <td style="text-align: right"> {{ concept.current_amount_per_month|floatformat:2 }}</td>
-        </tr>
+        <div style="display: none;" class="index-title-column secondary {{group}}">{{concept}}</div>
+        <div style="display: none;" class="index-amount-column secondary {{group}}">{{concept.current_amount_per_month|floatformat:2}}</div>
         {% endfor %}
-    {% endif %}
     {% endfor %}
-</table>
+</div>

@@ -1,20 +1,4 @@
-li a {
-    color: blue;
-}
-
-div#expenses-head {
-    position: left;
-    width: 900px;
-    margin: 0 0 0 20; 
-    padding: 2px; 
-    color: #ffffff;
-    font-size: 125%;
-}
-
-.secondary {
-    color: #666666;
-    font-size: 90%;
-}
+/* grids */
 
 .top-buttons-grid {
     display: grid;
@@ -22,6 +6,7 @@ div#expenses-head {
     justify-items: center;
     grid-gap: 2px;
     margin: 2px;
+    margin-bottom: 25px;
 }
 
 .event-list-grid {
@@ -32,9 +17,14 @@ div#expenses-head {
     margin: 10px;
 }
 
-.event-list-grid div {
-    width: 100%;
+.index-grid {
+    display: grid;
+    grid-template-columns: [first] 200px [second] 200px [third] 200px;
+    grid-gap: 4px 10px;
+    margin-left: 10px;
 }
+
+/* grid elements */
 
 .top-buttons-grid a {
     border: none;
@@ -47,6 +37,45 @@ div#expenses-head {
     font-size: 30;
     border-radius: 10px;
     margin-left: 0px;
+}
+
+.index-header {
+    margin-top: 10px;
+    background-color: #cccccc;
+}
+
+.index-title-column {
+    text-align: left;
+    grid-column-start: first;
+}
+
+.index-amount-column {
+    text-align: right;
+    grid-column-start: second;
+}
+
+/* element style */
+
+li a {
+    color: blue;
+}
+
+div#expenses-head {
+    position: left;
+    width: 900px;
+    margin: 0 0 0 20;
+    padding: 2px;
+    color: #ffffff;
+    font-size: 125%;
+}
+
+.secondary {
+    color: #666666;
+    font-size: 90%;
+}
+
+.event-list-grid div {
+    width: 100%;
 }
 
 .top-button {
