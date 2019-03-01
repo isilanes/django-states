@@ -102,7 +102,7 @@ class Update(models.Model):
     concept = models.ForeignKey(Concept, blank=True, on_delete=models.CASCADE, default=1)
     when = models.DateTimeField("When", blank=True, default=timezone.now)
     amount = models.FloatField("Amount", default=0.0)  # positive = income, negative = expense
-    comment = models.CharField("Comment", max_length=500, default=" ")
+    comment = models.CharField("Comment", max_length=500, default="-", blank=True)
 
     # Special methods:
     def __str__(self):
