@@ -5,5 +5,4 @@ __pycache__
 backup
 .idea
 *nonfree*
-expenses/static
 django-states/templates/main_index.html
