@@ -4,8 +4,10 @@
 <div class="index-grid">
     <div class="index-title-column index-header">Summary</div>
     <div class="index-amount-column index-header">Monthly net</div>
+    <div class="index-acc-amount-column index-header">Accumulated</div>
 
     <div class="index-amount-column">{{ net|floatformat:2 }}</div>
+    <div class="index-acc-amount-column">{{ accumulated|floatformat:2 }}</div>
 
     <div class="index-title-column index-header">Income</div>
     <div class="index-amount-column index-header" id="xyz">Monthly sum</div>

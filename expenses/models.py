@@ -109,3 +109,12 @@ class Update(models.Model):
         return f"{self.amount} euros for '{self.concept}' on {self.when}"
 
 
+class OneOffUpdate(models.Model):
+    when = models.DateTimeField("When", blank=True, default=timezone.now)
+    amount = models.FloatField("Amount", default=0.0)  # positive = income, negative = expense
+    comment = models.CharField("Comment", max_length=500, default="-", blank=True)
+    
+    # Special methods:
+    def __str__(self):
+        return f"{self.amount} euros on {self.when}"
+

@@ -2,7 +2,7 @@
 from django.shortcuts import render
 
 # Our libs:
-from .models import Concept, Group, Update
+from .models import Concept, Group, Update, OneOffUpdate
 
 
 # Views:
@@ -17,6 +17,7 @@ def index(request, verbose=False):
         "expenses": expense_groups(),
         "incomes": income_groups(),
         "net": current_global_net(),
+        "accumulated": current_global_accumulated(),
         "verbose": verbose,
     }
 
@@ -55,3 +56,9 @@ def current_global_net():
     """Current global monthly net."""
 
     return sum([c.current_amount_per_month for c in Concept.objects.all()])
+
+
+def current_global_accumulated():
+    """Current global accumulated total."""
+    
+    return sum([u.amount for u in Update.objects.all()]) + sum([u.amount for u in OneOffUpdate.objects.all()])

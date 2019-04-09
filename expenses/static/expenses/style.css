@@ -19,7 +19,7 @@
 
 .index-grid {
     display: grid;
-    grid-template-columns: [first] 200px [second] 200px [third] 200px;
+    grid-template-columns: [first] 200px [second] 200px [third] 200px [fourth] 200px;
     grid-gap: 4px 10px;
     margin-left: 10px;
 }
@@ -52,6 +52,11 @@
 .index-amount-column {
     text-align: right;
     grid-column-start: second;
+}
+
+.index-acc-amount-column {
+    text-align: right;
+    grid-column-start: third;
 }
 
 /* element style */
