@@ -2,11 +2,11 @@
 from django.shortcuts import render
 
 # Our libs:
-from .models import Concept, Group, Update, OneOffUpdate
+from .models import Concept, Group, OneOffUpdate, Update, PeriodicUpdate
 
 
 # Views:
-def index(request, verbose=False):
+def index(request):
     """Index view."""
 
     for concept in Concept.objects.filter(group=None):
@@ -18,14 +18,9 @@ def index(request, verbose=False):
         "incomes": income_groups(),
         "net": current_global_net(),
         "accumulated": current_global_accumulated(),
-        "verbose": verbose,
     }
 
     return render(request, "expenses/index.html", context)
-
-
-def index_verbose(request):
-    return index(request, verbose=True)
 
 
 def event_list(request):
@@ -61,4 +56,4 @@ def current_global_net():
 def current_global_accumulated():
     """Current global accumulated total."""
     
-    return sum([u.amount for u in Update.objects.all()]) + sum([u.amount for u in OneOffUpdate.objects.all()])
+    return sum([u.amount for u in PeriodicUpdate.objects.all()]) + sum([u.amount for u in OneOffUpdate.objects.all()])

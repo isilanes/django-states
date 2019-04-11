@@ -46,7 +46,7 @@ class Concept(models.Model):
             try:
                 current = list(self.updates)[-1]
                 return current.amount / self.periodicity
-            except ValueError:
+            except (ValueError, IndexError):
                 return 0.0
         # Non-periodic concepts are averaged over the latest up to 5:
         else:
@@ -62,7 +62,7 @@ class Concept(models.Model):
     def updates(self):
         """List of Updates in this concept, sorted by date."""
 
-        return self.update_set.order_by("when")
+        return self.periodicupdate_set.order_by("when")
 
     @property
     def current_amount_per_month(self):
@@ -99,17 +99,8 @@ class Concept(models.Model):
 
 
 class Update(models.Model):
-    concept = models.ForeignKey(Concept, blank=True, on_delete=models.CASCADE, default=1)
-    when = models.DateTimeField("When", blank=True, default=timezone.now)
-    amount = models.FloatField("Amount", default=0.0)  # positive = income, negative = expense
-    comment = models.CharField("Comment", max_length=500, default="-", blank=True)
-
-    # Special methods:
-    def __str__(self):
-        return f"{self.amount} euros for '{self.concept}' on {self.when}"
-
-
-class OneOffUpdate(models.Model):
+    """Base class for updates."""
+    
     when = models.DateTimeField("When", blank=True, default=timezone.now)
     amount = models.FloatField("Amount", default=0.0)  # positive = income, negative = expense
     comment = models.CharField("Comment", max_length=500, default="-", blank=True)
@@ -118,3 +109,17 @@ class OneOffUpdate(models.Model):
     def __str__(self):
         return f"{self.amount} euros on {self.when}"
 
+
+class PeriodicUpdate(Update):
+    """Periodic updates."""
+    
+    concept = models.ForeignKey(Concept, blank=True, on_delete=models.CASCADE, default=1)
+    
+    # Special methods:
+    def __str__(self):
+        return f"{self.amount} euros for '{self.concept}' on {self.when}"
+    
+    
+class OneOffUpdate(Update):
+    """One-off updates."""
+    pass

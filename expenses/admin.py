@@ -2,12 +2,12 @@
 from django.contrib import admin
 
 # Our libs:
-from .models import Concept, Update, Group, OneOffUpdate
+from .models import Concept, Group, OneOffUpdate, PeriodicUpdate
 
 
 # Classes:
 class UpdateInline(admin.StackedInline):
-    model = Update
+    model = PeriodicUpdate
     extra = 1
 
 
@@ -17,11 +17,6 @@ class PeriodicExpenseAdmin(admin.ModelAdmin):
     list_display = ("name",)
     search_fields = ["name"]
     inlines = [UpdateInline]
-
-
-@admin.register(Update)
-class UpdateAdmin(admin.ModelAdmin):
-    pass
 
 
 @admin.register(Group)
@@ -34,3 +29,6 @@ class OneOffUpdateAdmin(admin.ModelAdmin):
     pass
 
 
+@admin.register(PeriodicUpdate)
+class PeriodicUpdateAdmin(admin.ModelAdmin):
+    pass
