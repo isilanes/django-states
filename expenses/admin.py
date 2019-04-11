@@ -2,7 +2,7 @@
 from django.contrib import admin
 
 # Our libs:
-from .models import Concept, Group, OneOffUpdate, PeriodicUpdate
+from .models import Concept, Group, OneOffUpdate, PeriodicUpdate, DescriptionTranslation
 
 
 # Classes:
@@ -31,4 +31,9 @@ class OneOffUpdateAdmin(admin.ModelAdmin):
 
 @admin.register(PeriodicUpdate)
 class PeriodicUpdateAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(DescriptionTranslation)
+class DescriptionTranslationAdmin(admin.ModelAdmin):
     pass

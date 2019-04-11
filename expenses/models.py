@@ -73,7 +73,7 @@ class Concept(models.Model):
 
     # Special methods:
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.group})"
 
     def __unicode__(self):
         return self.__str__()
@@ -117,3 +117,14 @@ class PeriodicUpdate(Update):
 class OneOffUpdate(Update):
     """One-off updates."""
     pass
+
+
+class DescriptionTranslation(models.Model):
+    """Given a description (such as the one at the bank's CSV), return name of corresponding Concept."""
+    
+    description = models.CharField("Description", max_length=100)
+    concept_name = models.CharField("Concept name", max_length=100)
+    
+    # Special methods:
+    def __str__(self):
+        return f"{self.description} -> {self.concept_name}"

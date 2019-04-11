@@ -11,12 +11,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "DjangoStates.settings")
 django.setup()
 
 # Our libs:
-from expenses.models import PeriodicUpdate, Concept
-
-# Globals:
-PERIODICS = {
-    "INTERMON": "Intermon",
-}
+from expenses.models import PeriodicUpdate, Concept, DescriptionTranslation
 
 
 # Functions:
@@ -29,34 +24,35 @@ def main():
         for line in f:
             line = line.strip()
             description, timestamp, _, _, amount, _ = line.split(";")
-            
+
+            # Skip descriptions we can not identify:
+            try:
+                concept_name = DescriptionTranslation.objects.get(description=description).concept_name
+            except DescriptionTranslation.DoesNotExist:
+                print(f"Unknown description --> {description}")
+                continue
+                
             t = datetime.strptime(timestamp, "%d/%m/%Y")
             t = make_aware(t)  # add timezone for Django
-            print(t)
             amount = float(amount.replace(",", ""))
             
             # Skip duplicates:
             such_updates = PeriodicUpdate.objects \
-                .filter(when__gt=t)\
-                .filter(when__lt=t+timedelta(days=1))
+                .filter(when__gte=t)\
+                .filter(when__lte=t+timedelta(days=1))\
+                .filter(amount__gte=amount-0.01)\
+                .filter(amount__lte=amount+0.01)  # just in case with those sneaky floats
 
-            u = such_updates[0]
-            print(u.amount)
-            exit()
             if such_updates:
                 print(f"Skipped -> {line}")
                 continue
             
-            
-            if description in PERIODICS:
-                update = PeriodicUpdate()
-                update.when = t
-                update.amount = amount
-                update.concept = Concept.objects.get(name=PERIODICS[description])
-                #update.save()
-                print(update)
-            else:
-                print(f"Unknown description --> {description}")
+            update = PeriodicUpdate()
+            update.when = t
+            update.amount = amount
+            update.concept = Concept.objects.get(name=concept_name)
+            update.save()
+            print(f"Saved -> {update}")
 
 
 # Main:
