@@ -30,7 +30,7 @@ def event_list(request):
     context = {
         "events": Update.objects.all().order_by("-when"),
     }
-
+    
     return render(request, "expenses/event_list.html", context)
 
 
@@ -56,4 +56,4 @@ def current_global_net():
 def current_global_accumulated():
     """Current global accumulated total."""
     
-    return sum([u.amount for u in PeriodicUpdate.objects.all()]) + sum([u.amount for u in OneOffUpdate.objects.all()])
+    return sum([u.amount for u in Update.objects.all()])

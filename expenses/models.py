@@ -108,6 +108,13 @@ class Update(models.Model):
     # Special methods:
     def __str__(self):
         return f"{self.amount} euros on {self.when}"
+    
+    # Properties
+    def concept_name(self):
+        try:
+            return self.periodicupdate.concept.name
+        except Update.DoesNotExist:
+            return ""
 
 
 class PeriodicUpdate(Update):
