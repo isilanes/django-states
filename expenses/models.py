@@ -1,3 +1,6 @@
+# Standard libs:
+from datetime import timedelta
+
 # Django libs:
 from django.db import models
 from django.utils import timezone
@@ -38,27 +41,6 @@ class Concept(models.Model):
 
     # Public properties:
     @property
-    def current_amount_per_day(self):
-        """Euros per day in (positive) or out (negative), as of latest changes."""
-
-        # For periodic concepts, take latest period only:
-        if self.periodic:
-            try:
-                current = list(self.updates)[-1]
-                return current.amount / self.periodicity
-            except (ValueError, IndexError):
-                return 0.0
-        # Non-periodic concepts are averaged over the latest up to 5:
-        else:
-            try:
-                latest = list(self.updates)[-5:]
-                total_sum = sum([x.amount for x in latest])
-                dt = (timezone.now() - latest[0].when).total_seconds() / 86400.  # delta time in days
-                return total_sum / dt
-            except IndexError:
-                return 0.0
-
-    @property
     def updates(self):
         """List of Updates in this concept, sorted by date."""
 
@@ -67,8 +49,13 @@ class Concept(models.Model):
     @property
     def current_amount_per_month(self):
         """Euros per month in (positive) or out (negative), as of latest changes."""
-
-        return self.current_amount_per_day * 30
+        
+        one_year_ago = timezone.now() - timedelta(days=365)
+        
+        last_year_updates = self.periodicupdate_set.filter(when__gt=one_year_ago)
+        amount_in_a_year = sum([x.amount for x in last_year_updates])
+        
+        return amount_in_a_year / 12.
 
     @property
     def periodicity(self):
@@ -76,7 +63,7 @@ class Concept(models.Model):
 
         u = list(self.updates)
         if len(u) < 2:
-            return 30
+            return None
 
         first = u[0]
         last = u[-1]
@@ -92,10 +79,10 @@ class Concept(models.Model):
         return self.__str__()
 
     def __lt__(self, other):
-        if self.current_amount_per_day < 0 and other.current_amount_per_day < 0:
-            return self.current_amount_per_day < other.current_amount_per_day
+        if self.current_amount_per_month < 0 and other.current_amount_per_month < 0:
+            return self.current_amount_per_month < other.current_amount_per_month
 
-        return self.current_amount_per_day > other.current_amount_per_day
+        return self.current_amount_per_month > other.current_amount_per_month
 
 
 class Update(models.Model):
