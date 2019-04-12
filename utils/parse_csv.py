@@ -43,8 +43,11 @@ def main():
             # Skip descriptions we can not identify:
             concept_name = identify_concept(description)
             if not concept_name:
-                print(f"Unknown description --> {description}: {line}")
-                break
+                print(f"\033[31mUnknown description:\033[0m {description}: {line}")
+                if opts.go_on:
+                    continue
+                else:
+                    break
 
             # Save update:
             update = PeriodicUpdate()
@@ -79,6 +82,10 @@ def parse_args(args=sys.argv[1:]):
     parser.add_argument("-y", "--dry-run",
                         action="store_true",
                         help="Dry run. Default: real run.")
+    
+    parser.add_argument("--go-on",
+                        action="store_true",
+                        help="Go on after a failed description identification. Default: stop at first failure.")
     
     return parser.parse_args(args)
 
