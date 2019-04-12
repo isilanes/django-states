@@ -121,10 +121,20 @@ class OneOffUpdate(Update):
 
 class DescriptionTranslation(models.Model):
     """Given a description (such as the one at the bank's CSV), return name of corresponding Concept."""
-    
+
     description = models.CharField("Description", max_length=100)
-    concept_name = models.CharField("Concept name", max_length=100)
+    concept = models.ForeignKey(Concept, blank=True, on_delete=models.CASCADE, default=1)
     
     # Special methods:
     def __str__(self):
-        return f"{self.description} -> {self.concept_name}"
+        return f"{self.description} -> {self.concept.name}"
+
+
+class ParsedLine(models.Model):
+    """CSV line already parsed (so ignore it)."""
+    
+    line = models.CharField("Line", max_length=250)
+    
+    # Special methods:
+    def __str__(self):
+        return self.line
