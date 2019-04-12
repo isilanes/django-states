@@ -28,9 +28,9 @@ def main():
             line = line.strip()
             
             # Skip if already parsed:
-            if ParsedLine.objects.filter(line=line):
+            if line_already_parsed(line):
                 if opts.verbose:
-                    print(f"Skipped -> {line}")
+                    print(f"\033[33mSkipped\033[0m -> {line}")
                 continue
             
             # Extract info from line:
@@ -41,24 +41,27 @@ def main():
             amount = float(amount.replace(",", ""))
             
             # Skip descriptions we can not identify:
-            try:
-                concept_name = DescriptionTranslation.objects.get(description=description).concept.name
-            except DescriptionTranslation.DoesNotExist:
-                print(f"Unknown description --> {description}")
-                continue
+            concept_name = identify_concept(description)
+            if not concept_name:
+                print(f"Unknown description --> {description}: {line}")
+                break
 
             # Save update:
             update = PeriodicUpdate()
             update.when = t
             update.amount = amount
             update.concept = Concept.objects.get(name=concept_name)
-            update.save()
+            if not opts.dry_run:
+                update.save()
             
-            # Save line as parsed:
+            # Fake save, if asked to:
+            if opts.dry_run:
+                print(f"\033[32mWould save:\033[0m {update}")
+                continue
+                
+            # Save parsed line:
             save_line(line)
-            
-            # Log:
-            print(f"Saved -> {update}")
+            print(f"\033[32mSaved\033[0m -> {update}")
 
 
 def parse_args(args=sys.argv[1:]):
@@ -73,7 +76,11 @@ def parse_args(args=sys.argv[1:]):
                         action="store_true",
                         help="Be verbose. Default: do not be.")
     
-    return parser.parse_args()
+    parser.add_argument("-y", "--dry-run",
+                        action="store_true",
+                        help="Dry run. Default: real run.")
+    
+    return parser.parse_args(args)
 
 
 def save_line(line):
@@ -82,6 +89,28 @@ def save_line(line):
     pl = ParsedLine()
     pl.line = line
     pl.save()
+
+
+def line_already_parsed(line):
+    """Return True if line already parsed."""
+    
+    for _ in ParsedLine.objects.filter(line=line):
+        return True
+    
+    return False
+
+
+def identify_concept(description):
+    """Return concept name corresponding to descritiption, or None if none found."""
+    
+    for dt in DescriptionTranslation.objects.all():
+        if dt.description in description:
+            return dt.concept.name
+    
+    try:
+        return DescriptionTranslation.objects.get(description=description).concept.name
+    except DescriptionTranslation.DoesNotExist:
+        return None
 
 
 # Main:
