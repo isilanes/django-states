@@ -23,7 +23,9 @@ def main():
         
         for line in f:
             line = line.strip()
-            description, timestamp, _, _, amount, _ = line.split(";")
+            description, timestamp, _, extra, amount, _ = line.split(";")
+            
+            description = f"{description} ({extra})"
 
             # Skip descriptions we can not identify:
             try:
