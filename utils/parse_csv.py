@@ -53,7 +53,11 @@ def main():
             update = PeriodicUpdate()
             update.when = t
             update.amount = amount
-            update.concept = Concept.objects.get(name=concept_name)
+            try:
+                update.concept = Concept.objects.get(name=concept_name)
+            except Concept.MultipleObjectsReturned:
+                print(Concept.objects.filter(name=concept_name))
+                break
             if not opts.dry_run:
                 update.save()
             
