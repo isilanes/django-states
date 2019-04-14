@@ -18,7 +18,7 @@
         <button class="toggle" onclick="mytoggle('{{group}}')">[toggle show]</button>
 
         {% for concept in group.concepts %}
-        <div style="display: none;" class="index-title-column secondary {{group}}">{{concept}}</div>
+        <div style="display: none;" class="index-title-column secondary {{group}}">{{concept.name}}</div>
         <div style="display: none;" class="index-amount-column secondary {{group}}">{{concept.current_amount_per_month|floatformat:2}}</div>
         {% endfor %}
     {% endfor %}
@@ -32,7 +32,7 @@
         <button class="toggle" onclick="mytoggle('{{group}}')">[toggle show]</button>
 
         {% for concept in group.concepts %}
-        <div style="display: none;" class="index-title-column secondary {{group}}">{{concept}}</div>
+        <div style="display: none;" class="index-title-column secondary {{group}}">{{concept.name}}</div>
         <div style="display: none;" class="index-amount-column secondary {{group}}">{{concept.current_amount_per_month|floatformat:2}}</div>
         {% endfor %}
     {% endfor %}
