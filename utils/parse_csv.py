@@ -12,6 +12,99 @@ django.setup()
 from expenses.models import PeriodicUpdate, Concept, DescriptionTranslation, ParsedLine
 
 
+class DigestedLine:
+
+    def __init__(self, line):
+        self.line = line
+
+        # Helpers:
+        self._concept = None
+        self._concept_col = None
+        self._extra_data_col = None
+        self._date_col = None
+        self._amount_col = None
+
+    def identify_concept(self):
+        """Return Concept to description, or None if none found."""
+
+        # Try DescriptionTranslation with exact same description field as our concept column:
+        dt = DescriptionTranslation.objects.filter(description=self.concept_col).first()
+        if dt is not None:
+            return dt.concept
+
+        # Else, try DescriptionTranslation with description containing combined {concept_col}+{extra_data_col}:
+        dt = DescriptionTranslation.objects.filter(description__contains=self.combined_concept).first()
+        if dt is not None:
+            return dt.concept
+
+        return None
+
+    def _digest_line(self):
+        self._concept_col, self._date_col, _, self._extra_data_col, self._amount_col, _ = self.line.split(";")
+
+    @property
+    def concept(self):
+        """
+        Concept object corresponding to this line.
+
+        :return: Concept
+        """
+        if self._concept is None:
+            self._concept = self.identify_concept()
+
+        return self._concept
+
+    @property
+    def concept_col(self):
+        """
+        Value in "concept" column of line.
+
+        :return: str
+        """
+        if self._concept_col is None:
+            self._digest_line()
+
+        return self._concept_col
+
+    @property
+    def combined_concept(self):
+        """
+        Combination of concept column + extra data column, to get something more unique.
+
+        :return: str
+        """
+        if self._concept_col is None or self._extra_data_col is None:
+            self._digest_line()
+
+        return f"{self._concept_col} ({self._extra_data_col})"
+
+    @property
+    def timestamp(self):
+        """
+        Time stamp of line.
+
+        :return: timezone-aware datetime
+        """
+        if self._date_col is None:
+            self._digest_line()
+
+        t = datetime.strptime(self._date_col, "%d/%m/%Y")
+
+        return make_aware(t)  # add timezone for Django
+
+    @property
+    def amount(self):
+        """
+        Amount of euros appearing in line.
+
+        :return: float
+        """
+        if self._amount_col is None:
+            self._digest_line()
+
+        return float(self._amount_col.replace(",", ""))
+
+
 def main():
     # Get CLI options:
     opts = parse_args()
@@ -30,16 +123,11 @@ def main():
                 continue
             
             # Extract info from line:
-            description, timestamp, _, extra, amount, _ = line.split(";")
-            description = f"{description} ({extra})"
-            t = datetime.strptime(timestamp, "%d/%m/%Y")
-            t = make_aware(t)  # add timezone for Django
-            amount = float(amount.replace(",", ""))
-            
+            digested = DigestedLine(line)
+
             # Skip descriptions we can not identify:
-            concept = identify_concept(description)
-            if not concept:
-                print(f"\033[31mUnknown description:\033[0m {description}: {line}")
+            if not digested.concept:
+                print(f"\033[31mCan't identify line:\033[0m {line.replace(';', ' | ')}")
                 if opts.go_on:
                     continue
                 else:
@@ -47,9 +135,9 @@ def main():
 
             # Save update:
             update = PeriodicUpdate()
-            update.when = t
-            update.amount = amount
-            update.concept = concept
+            update.when = digested.timestamp
+            update.amount = digested.amount
+            update.concept = digested.concept
 
             if not opts.dry_run:
                 update.save()
@@ -102,16 +190,6 @@ def line_already_parsed(line):
         return True
     
     return False
-
-
-def identify_concept(description):
-    """Return Concept to description, or None if none found."""
-
-    dt = DescriptionTranslation.objects.filter(description__contains=description).first()
-    if dt is not None:
-        return dt.concept
-
-    return None
 
 
 # Main:
