@@ -1,12 +1,9 @@
-# Standard libs:
 from datetime import timedelta
 
-# Django libs:
 from django.db import models
 from django.utils import timezone
 
 
-# Classes:
 class Group(models.Model):
     name = models.CharField("Name", max_length=200)
 
@@ -125,7 +122,6 @@ class DescriptionTranslation(models.Model):
     description = models.CharField("Description", max_length=100)
     concept = models.ForeignKey(Concept, blank=True, on_delete=models.CASCADE, default=1)
     
-    # Special methods:
     def __str__(self):
         return f"{self.description} -> {self.concept.name}"
 
@@ -135,6 +131,5 @@ class ParsedLine(models.Model):
     
     line = models.CharField("Line", max_length=250)
     
-    # Special methods:
     def __str__(self):
         return self.line

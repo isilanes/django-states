@@ -1,4 +1,3 @@
-# Standard libs:
 import os
 import sys
 import django
@@ -6,16 +5,13 @@ import argparse
 from datetime import datetime
 from django.utils.timezone import make_aware
 
-# Python stuff:
 sys.path.append(".")
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "DjangoStates.settings")
 django.setup()
 
-# Our libs:
 from expenses.models import PeriodicUpdate, Concept, DescriptionTranslation, ParsedLine
 
 
-# Functions:
 def main():
     # Get CLI options:
     opts = parse_args()
@@ -41,8 +37,8 @@ def main():
             amount = float(amount.replace(",", ""))
             
             # Skip descriptions we can not identify:
-            concept_name = identify_concept(description)
-            if not concept_name:
+            concept = identify_concept(description)
+            if not concept:
                 print(f"\033[31mUnknown description:\033[0m {description}: {line}")
                 if opts.go_on:
                     continue
@@ -53,11 +49,8 @@ def main():
             update = PeriodicUpdate()
             update.when = t
             update.amount = amount
-            try:
-                update.concept = Concept.objects.get(name=concept_name)
-            except Concept.MultipleObjectsReturned:
-                print(Concept.objects.filter(name=concept_name))
-                break
+            update.concept = concept
+
             if not opts.dry_run:
                 update.save()
             
@@ -112,16 +105,13 @@ def line_already_parsed(line):
 
 
 def identify_concept(description):
-    """Return concept name corresponding to descritiption, or None if none found."""
-    
-    for dt in DescriptionTranslation.objects.all():
-        if dt.description in description:
-            return dt.concept.name
-    
-    try:
-        return DescriptionTranslation.objects.get(description=description).concept.name
-    except DescriptionTranslation.DoesNotExist:
-        return None
+    """Return Concept to description, or None if none found."""
+
+    dt = DescriptionTranslation.objects.filter(description__contains=description).first()
+    if dt is not None:
+        return dt.concept
+
+    return None
 
 
 # Main:
