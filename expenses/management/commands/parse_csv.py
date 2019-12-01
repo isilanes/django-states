@@ -3,13 +3,83 @@ import sys
 import django
 import argparse
 from datetime import datetime
-from django.utils.timezone import make_aware
 
-sys.path.append(".")
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "DjangoStates.settings")
-django.setup()
+from django.utils.timezone import make_aware
+from django.core.management.base import BaseCommand
 
 from expenses.models import PeriodicUpdate, Concept, DescriptionTranslation, ParsedLine
+
+
+class Command(BaseCommand):
+    help = "Parses a CSV from bank."
+
+    def add_arguments(self, parser):
+        """Parse CLI arguments and return a options object."""
+
+        parser.add_argument("input_filename",
+                            help="Input file name.")
+
+        parser.add_argument("--verbose",
+                            action="store_true",
+                            help="Be verbose. Default: do not be.")
+
+        parser.add_argument("-y", "--dry-run",
+                            action="store_true",
+                            help="Dry run. Default: real run.")
+
+        parser.add_argument("--go-on",
+                            action="store_true",
+                            help="Go on after a failed description identification. Default: stop at first failure.")
+
+    def handle(self, *args, **kwargs):
+
+        input_file_name = kwargs["input_filename"]
+        verbose = kwargs["verbose"]
+        go_on = kwargs["go_on"]
+        dry_run = kwargs["dry_run"]
+
+        with open(input_file_name) as f:
+            for i in range(3):
+                f.readline()  # skip 3 lines
+
+            for line in f:
+                line = line.strip()
+
+                # Skip if already parsed:
+                if line_already_parsed(line):
+                    if verbose:
+                        print(f"\033[33mSkipped\033[0m -> {line}")
+                    continue
+
+                # Extract info from line:
+                digested = DigestedLine(line)
+
+                # Skip descriptions we can not identify:
+                if not digested.concept:
+                    print(f"\033[31mCan't identify line:\033[0m {line.replace(';', ' | ')}")
+                    if go_on:
+                        continue
+                    else:
+                        print(f"Line was: {line}")
+                        break
+
+                # Save update:
+                update = PeriodicUpdate()
+                update.when = digested.timestamp
+                update.amount = digested.amount
+                update.concept = digested.concept
+
+                if not dry_run:
+                    update.save()
+
+                # Fake save, if asked to:
+                if dry_run:
+                    print(f"\033[32mWould save:\033[0m {update}")
+                    continue
+
+                # Save parsed line:
+                save_line(line)
+                print(f"\033[32mSaved\033[0m -> {update}")
 
 
 class DigestedLine:
@@ -105,76 +175,6 @@ class DigestedLine:
         return float(self._amount_col.replace(",", ""))
 
 
-def main():
-    # Get CLI options:
-    opts = parse_args()
-    
-    with open(opts.input_filename) as f:
-        for i in range(3):
-            f.readline()  # skip 3 lines
-        
-        for line in f:
-            line = line.strip()
-            
-            # Skip if already parsed:
-            if line_already_parsed(line):
-                if opts.verbose:
-                    print(f"\033[33mSkipped\033[0m -> {line}")
-                continue
-            
-            # Extract info from line:
-            digested = DigestedLine(line)
-
-            # Skip descriptions we can not identify:
-            if not digested.concept:
-                print(f"\033[31mCan't identify line:\033[0m {line.replace(';', ' | ')}")
-                if opts.go_on:
-                    continue
-                else:
-                    break
-
-            # Save update:
-            update = PeriodicUpdate()
-            update.when = digested.timestamp
-            update.amount = digested.amount
-            update.concept = digested.concept
-
-            if not opts.dry_run:
-                update.save()
-            
-            # Fake save, if asked to:
-            if opts.dry_run:
-                print(f"\033[32mWould save:\033[0m {update}")
-                continue
-                
-            # Save parsed line:
-            save_line(line)
-            print(f"\033[32mSaved\033[0m -> {update}")
-
-
-def parse_args(args=sys.argv[1:]):
-    """Parse CLI arguments and return a options object."""
-    
-    parser = argparse.ArgumentParser()
-    
-    parser.add_argument("input_filename",
-                        help="Input file name.")
-    
-    parser.add_argument("-v", "--verbose",
-                        action="store_true",
-                        help="Be verbose. Default: do not be.")
-    
-    parser.add_argument("-y", "--dry-run",
-                        action="store_true",
-                        help="Dry run. Default: real run.")
-    
-    parser.add_argument("--go-on",
-                        action="store_true",
-                        help="Go on after a failed description identification. Default: stop at first failure.")
-    
-    return parser.parse_args(args)
-
-
 def save_line(line):
     """Save line as parsed (to ignore in the future)."""
     
@@ -191,7 +191,3 @@ def line_already_parsed(line):
     
     return False
 
-
-# Main:
-if __name__ == "__main__":
-    main()
