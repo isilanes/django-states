@@ -1,7 +1,3 @@
-import os
-import sys
-import django
-import argparse
 from datetime import datetime
 
 from django.utils.timezone import make_aware
